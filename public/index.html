@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Sistema de Reservas de Hotel</title>  
+</head>
+<body>
+    <div class="header">
+        <h1>Sistema de Reservas de Hotel</h1>
+    </div>
+    
+    <div class="nav">
+        <a href="#" id="homeLink"><i class="fas fa-solid fa-house"></i> Inicio</a>
+        <a href="#" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+        <a href="#" id="registerLink"><i class="fa-solid fa-user-plus"></i> Registrarse</a>
+        <a href="#" id="reservationsLink" class="hidden"><i class="fa-solid fa-bookmark"></i> Mis Reservas</a>
+        <a href="#" id="logoutLink" class="hidden"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
+        <a href="admin-panel.html" id="adminLink" class="hidden"><i class="fas fa-cog"></i> Administración</a>
+    </div>
+    
+    <div class="container">
+        <!-- Página de Inicio -->
+        <div id="homePage">
+            <div class="search-form">
+                <h2><i class="fa-solid fa-magnifying-glass"></i> Buscar Habitaciones Disponibles</h2>
+                <div class="form-group">
+                    <label for="checkin"><i class="fa-solid fa-calendar-days"></i> Fecha de Entrada:</label>
+                    <input type="date" id="checkin" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkout"><i class="fa-solid fa-calendar-days"></i> Fecha de Salida:</label>
+                    <input type="date" id="checkout" required>
+                </div>
+                <div class="form-group">
+                    <label for="hotel"><i class="fa-solid fa-hotel"></i> Hotel:</label>
+                    <select id="hotel">
+                        <option value=""><i class="fa-solid fa-hotel"></i> Todos los hoteles</option>
+                    </select>
+                </div>
+                <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i> Buscar Disponibilidad</button>
+            </div>
+            
+            <div id="searchResults" class="hidden">
+                <h2><i class="fa-solid fa-square-poll-vertical"></i> Resultados de Búsqueda</h2>
+                <div id="hotelsResults" class="hotel-list"></div>
+            </div>
+        </div>
+        
+        <!-- Formulario de Login -->
+        <div id="loginPage" class="hidden">
+            <div class="login-form">
+                <h2> Iniciar Sesión</h2>
+                <div class="form-group">
+                    <label for="loginEmail"> Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword"> Contraseña:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button id="loginBtn"> Ingresar</button>
+                <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate aquí</a></p>
+            </div>
+        </div>
+        
+        <!-- Formulario de Registro -->
+        <div id="registerPage" class="hidden">
+            <div class="login-form">
+                <h2> Crear Cuenta</h2>
+                <div class="form-group">
+                    <label for="registerName"> Nombre Completo:</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail"> Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword"> Contraseña:</label>
+                    <input type="password" id="registerPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword"> Confirmar Contraseña:</label>
+                    <input type="password" id="registerConfirmPassword" required>
+                </div>
+                <button id="registerBtn"> Registrarse</button>
+                <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión aquí</a></p>
+            </div>
+        </div>
+        
+        <!-- Mis Reservas -->
+        <div id="reservationsPage" class="hidden">
+            <h2> Mis Reservas</h2>
+            <div id="userReservations"></div>
+        </div>
+        
+        <!-- Mensajes -->
+        <div id="message" class="hidden"></div>
+    </div>
+    <footer>
+        <div class="info-footer">
+            <section>
+                <h3>Centro de estudio: IFTS - 16</h3>
+                <p><span>Desarrollo de software</span></p>
+                <p>Programación Orientada a Objetos</p>
+                <p>Profesor: Manuel Buceta</p>
+                <p>"Grupo 2"</p>
+                <p>Trabajo Práctico Nro: 2</p>
+            </section>
+            <section>
+                <h3>Integrantes del grupo</h3>
+                <p>Lucia Corral</p>
+                <p>Carla Guisande</p>
+                <p>Ignacio Hernandez</p>
+                <p>Ignacio Vidal</p>
+                <p>Pablo Demartini</p>
+            </section>
+            <section>
+                <h3>Links</h3>
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="./index.html"><i class="fas fa-solid fa-house"></i> Inicio</a></li>
+                        <li><a href="#" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> Repo Grupo 2</a></li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+        <p>&copy; 2025 <span> - POO - Grupo 2 -</span> Todos los derechos reservados.</p>
+    </footer>
+    <script src="/js/scripts.js"></script>
+</body>
+</html>

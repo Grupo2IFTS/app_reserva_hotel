@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Panel de Administración - Sistema de Hoteles</title>
+</head>
+<body>
+    <div class="header">
+        <h1>Panel de Administración</h1>
+    </div>
+    
+    <div class="nav">
+        <a href="index.html"><i class="fas fa-solid fa-house"></i> Volver al Sitio</a>
+        <a href="#" id="usersTab"><i class="fas fa-users"></i> Usuarios</a>
+        <a href="#" id="clientsTab"><i class="fas fa-address-card"></i> Clientes</a>
+        <a href="#" id="reservationsTab"><i class="fas fa-bookmark"></i> Reservas</a>
+        <a href="#" id="hotelsTab"><i class="fas fa-hotel"></i> Hoteles</a>
+    </div>
+    
+    <div class="container">
+        <!-- Panel de Usuarios -->
+        <div id="usersPanel">
+            <h2>Gestión de Usuarios</h2>
+            <div class="admin-actions">
+                <button id="refreshUsers"><i class="fas fa-sync"></i> Actualizar</button>
+            </div>
+            <div id="usersList" class="admin-list"></div>
+        </div>
+        
+        <!-- Panel de Clientes -->
+        <div id="clientsPanel" class="hidden">
+            <h2>Gestión de Clientes</h2>
+            <div class="admin-actions">
+                <button id="refreshClients"><i class="fas fa-sync"></i> Actualizar</button>
+            </div>
+            <div id="clientsList" class="admin-list"></div>
+        </div>
+        
+        <!-- Panel de Reservas -->
+        <div id="reservationsPanel" class="hidden">
+            <h2>Gestión de Reservas</h2>
+            <div class="admin-actions">
+                <button id="refreshReservations"><i class="fas fa-sync"></i> Actualizar</button>
+            </div>
+            <div id="reservationsList" class="admin-list"></div>
+        </div>
+        
+        <!-- Panel de Hoteles -->
+        <div id="hotelsPanel" class="hidden">
+            <h2>Gestión de Hoteles</h2>
+            <div class="admin-actions">
+                <button id="refreshHotels"><i class="fas fa-sync"></i> Actualizar</button>
+                <button id="addHotel"><i class="fas fa-plus"></i> Agregar Hotel</button>
+            </div>
+            <div id="hotelsList" class="admin-list"></div>
+        </div>
+    </div>
+    
+    <script src="js/admin-panel.js"></script>
+</body>
+</html>
