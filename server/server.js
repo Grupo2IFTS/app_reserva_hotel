@@ -60,7 +60,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// APLICAR MIDDLEWARE DE ADMIN AQUÍ - después de definir requireAdmin
+// APLICAR MIDDLEWARE DE ADMIN AQUÍ
 app.use('/api/admin', requireAdmin);
 
 // Función para convertir BigInt a Number
@@ -88,7 +88,7 @@ function convertBigInt(obj) {
   return obj;
 }
 
-// Función auxiliar para ejecutar consultas (reemplaza executeQuery)
+// Función auxiliar para ejecutar consultas.
 async function executeQuery(query, params = []) {
   let conn;
   try {
@@ -224,71 +224,11 @@ app.post('/api/buscar-disponibilidad', async (req, res) => {
 });
 
 // Registro de usuario
-/* app.post('/api/registro', async (req, res) => {
-  try {
-    const { nombre, email, password } = req.body;
-
-    if (!nombre || !email || !password) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
-    }
-
-    const conn = await db.getConnection();
-
-    // Verificar si el email ya existe
-    const usuarioExistente = await conn.query(
-      'SELECT id_usuario FROM Usuario WHERE email = ?',
-      [email]
-    );
-
-    if (usuarioExistente.length > 0) {
-      await conn.release();
-      return res.status(400).json({ error: 'El email ya está registrado' });
-    }
-
-    // Hash de la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Crear usuario
-    const resultadoUsuario = await conn.query(
-      'INSERT INTO Usuario (email, password, fecha_registro, activo, rol) VALUES (?, ?, NOW(), 1, "cliente")',
-      [email, hashedPassword]
-    );
-
-    const idUsuario = Number(resultadoUsuario.insertId);
-
-    // Crear cliente
-    const nombreCompleto = nombre.split(' ');
-    const primerNombre = nombreCompleto[0];
-    const apellido = nombreCompleto.slice(1).join(' ') || 'Usuario';
-    const dniTemporal = Math.random().toString().substr(2, 8);
-
-    await conn.query(
-      'INSERT INTO Cliente (nombre, apellido, dni, email, telefono, id_usuario) VALUES (?, ?, ?, ?, ?, ?)',
-      [primerNombre, apellido, dniTemporal, email, '000000000', idUsuario]
-    );
-
-    await conn.release();
-
-    res.json({
-      success: true,
-      message: 'Usuario registrado correctamente. Ahora puede iniciar sesión.'
-    });
-  } catch (error) {
-    console.error('Error en registro:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-}); */
-
-// Registro de usuario
 app.post('/api/registro', async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
 
-    console.log('📝 === DEBUG REGISTRO INICIADO ===');
+    console.log('=== DEBUG REGISTRO INICIADO ===');
     console.log('Datos recibidos:', { nombre, email, password: password ? '[PROVIDED]' : 'MISSING' });
 
     if (!nombre || !email || !password) {
@@ -314,7 +254,7 @@ app.post('/api/registro', async (req, res) => {
 
     // Hash de la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('🔑 Contraseña hasheada correctamente');
+    console.log('Contraseña hasheada correctamente');
 
     // Crear usuario
     const resultadoUsuario = await conn.query(
@@ -323,7 +263,7 @@ app.post('/api/registro', async (req, res) => {
     );
 
     const idUsuario = Number(resultadoUsuario.insertId);
-    console.log('✅ Usuario creado con ID:', idUsuario);
+    console.log('Usuario creado con ID:', idUsuario);
 
     // Crear cliente - MEJORADO
     const nombreCompleto = nombre.trim().split(' ');
@@ -333,7 +273,7 @@ app.post('/api/registro', async (req, res) => {
     // Generar DNI temporal único
     const dniTemporal = 'TEMP_' + Date.now().toString().substr(8, 6);
 
-    console.log('👤 Creando cliente:', { primerNombre, apellido, dniTemporal, idUsuario });
+    console.log('Creando cliente:', { primerNombre, apellido, dniTemporal, idUsuario });
 
     const resultadoCliente = await conn.query(
       'INSERT INTO Cliente (nombre, apellido, dni, email, telefono, id_usuario) VALUES (?, ?, ?, ?, ?, ?)',
@@ -341,7 +281,7 @@ app.post('/api/registro', async (req, res) => {
     );
 
     const idCliente = Number(resultadoCliente.insertId);
-    console.log('✅ Cliente creado con ID:', idCliente);
+    console.log('Cliente creado con ID:', idCliente);
 
     await conn.release();
 
@@ -359,105 +299,18 @@ app.post('/api/registro', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 ERROR en registro:', error);
+    console.error('ERROR en registro:', error);
     res.status(500).json({ error: 'Error interno del servidor: ' + error.message });
   }
 });
-
-// Login de usuario
-/* app.post('/api/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    console.log('🔐 === DEBUG LOGIN INICIADO ===');
-    console.log('📧 Email recibido:', email);
-    console.log('🔑 Contraseña recibida:', password);
-
-    const conn = await db.getConnection();
-
-    // CONSULTA CON DEBUG
-    const query = `SELECT 
-  u.id_usuario, 
-  u.email, 
-  u.password, 
-  u.fecha_registro, 
-  u.activo, 
-  u.rol,
-  c.id_cliente,
-  c.nombre, 
-  c.apellido 
- FROM Usuario u 
- LEFT JOIN Cliente c ON u.id_usuario = c.id_usuario  // ← JOIN CORREGIDO
- WHERE u.email = ? AND u.activo = 1`;
-
-    console.log('📝 Ejecutando query...');
-
-    const usuarios = await conn.query(query, [email]);
-
-    console.log('👥 Usuarios encontrados:', usuarios.length);
-
-    if (usuarios.length === 0) {
-      console.log('❌ ERROR: No se encontró usuario con ese email');
-      await conn.release();
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-
-    const usuario = db.processResults(usuarios)[0];
-
-    console.log('✅ Usuario encontrado:', {
-      id: usuario.id_usuario,
-      email: usuario.email,
-      rol: usuario.rol,
-      activo: usuario.activo,
-      password: usuario.password ? `[HASH: ${usuario.password.substring(0, 20)}...]` : 'NULL'
-    });
-
-    // VERIFICAR CONTRASEÑA
-    console.log('🔍 Comparando contraseñas...');
-    console.log('   Contraseña ingresada:', password);
-    console.log('   Hash en BD:', usuario.password);
-
-    const passwordValido = await bcrypt.compare(password, usuario.password);
-    console.log('🔐 Resultado comparación:', passwordValido);
-
-    if (!passwordValido) {
-      console.log('❌ ERROR: Contraseña incorrecta');
-      await conn.release();
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-
-    // CREAR SESIÓN
-    req.session.user = {
-      id_usuario: Number(usuario.id_usuario),
-      id_cliente: usuario.usuario_id_cliente ? Number(usuario.usuario_id_cliente) : null,
-      email: usuario.email,
-      nombre: usuario.nombre || 'Usuario',
-      apellido: usuario.apellido || '',
-      rol: usuario.rol
-    };
-
-    console.log('🎉 SESIÓN CREADA:', req.session.user);
-    await conn.release();
-
-    res.json({
-      success: true,
-      message: 'Inicio de sesión exitoso',
-      user: req.session.user
-    });
-
-  } catch (error) {
-    console.error('💥 ERROR en login:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-}); */
 
 // Login de usuario
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log('🔐 === DEBUG LOGIN INICIADO ===');
-    console.log('📧 Email recibido:', email);
+    console.log('=== DEBUG LOGIN INICIADO ===');
+    console.log('Email recibido:', email);
 
     const conn = await db.getConnection();
 
@@ -476,21 +329,21 @@ app.post('/api/login', async (req, res) => {
     LEFT JOIN Cliente c ON u.id_usuario = c.id_usuario  -- JOIN CORREGIDO
     WHERE u.email = ? AND u.activo = 1`;
 
-    console.log('📝 Ejecutando query...');
+    console.log('Ejecutando query...');
 
     const usuarios = await conn.query(query, [email]);
 
-    console.log('👥 Usuarios encontrados:', usuarios.length);
+    console.log('Usuarios encontrados:', usuarios.length);
 
     if (usuarios.length === 0) {
-      console.log('❌ ERROR: No se encontró usuario con ese email');
+      console.log('ERROR: No se encontró usuario con ese email');
       await conn.release();
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
     const usuario = db.processResults(usuarios)[0];
 
-    console.log('✅ Usuario encontrado:', {
+    console.log('Usuario encontrado:', {
       id: usuario.id_usuario,
       email: usuario.email,
       rol: usuario.rol,
@@ -501,12 +354,12 @@ app.post('/api/login', async (req, res) => {
     });
 
     // VERIFICAR CONTRASEÑA
-    console.log('🔍 Comparando contraseñas...');
+    console.log('Comparando contraseñas...');
     const passwordValido = await bcrypt.compare(password, usuario.password);
-    console.log('🔐 Resultado comparación:', passwordValido);
+    console.log('Resultado comparación:', passwordValido);
 
     if (!passwordValido) {
-      console.log('❌ ERROR: Contraseña incorrecta');
+      console.log('ERROR: Contraseña incorrecta');
       await conn.release();
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
@@ -521,7 +374,7 @@ app.post('/api/login', async (req, res) => {
       rol: usuario.rol
     };
 
-    console.log('🎉 SESIÓN CREADA:', req.session.user);
+    console.log('SESIÓN CREADA:', req.session.user);
     await conn.release();
 
     res.json({
@@ -531,7 +384,7 @@ app.post('/api/login', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 ERROR en login:', error);
+    console.error('ERROR en login:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });

@@ -113,11 +113,11 @@ function setupEventListeners() {
 // Verificar estado de autenticación
 async function checkAuthStatus() {
   try {
-    console.log('🟡 FRONTEND: Verificando autenticación...');
+    console.log('FRONTEND: Verificando autenticación...');
     const response = await fetch('/api/user');
     const data = await response.json();
 
-    console.log('🟡 FRONTEND: Estado autenticación:', data);
+    console.log('FRONTEND: Estado autenticación:', data);
 
     if (data.authenticated) {
       appState.user = data.user;
@@ -127,7 +127,7 @@ async function checkAuthStatus() {
       updateUIForGuest();
     }
   } catch (error) {
-    console.error('💥 FRONTEND: Error verificando autenticación:', error);
+    console.error('FRONTEND: Error verificando autenticación:', error);
     showMessage('Error de conexión', 'error');
   }
 }
@@ -225,7 +225,7 @@ function updateUIForAuthenticatedUser() {
   console.log('🔍 Actualizando UI para usuario autenticado:', appState.user);
 
   if (!navLinks) {
-    console.error('❌ ERROR: navLinks no está definido');
+    console.error('ERROR: navLinks no está definido');
     return;
   }
 
@@ -238,7 +238,7 @@ function updateUIForAuthenticatedUser() {
   // Enlace de administración
   let adminLink = document.getElementById('adminLink');
   if (!adminLink) {
-    console.log('🟡 Creando enlace de administración...');
+    console.log('Creando enlace de administración...');
     adminLink = document.createElement('a');
     adminLink.id = 'adminLink';
     adminLink.href = 'admin-panel.html';
@@ -266,9 +266,9 @@ function updateUIForAuthenticatedUser() {
   // MOSTRAR NOMBRE CORRECTO
   const nombreUsuario = appState.user.nombre || appState.user.email;
   userGreeting.textContent = `Hola, ${nombreUsuario}`;
-  console.log('✅ Saludo actualizado:', userGreeting.textContent);
+  console.log('Saludo actualizado:', userGreeting.textContent);
 
-  console.log('✅ UI actualizada correctamente');
+  console.log('UI actualizada correctamente');
 }
 // Actualizar UI para invitado
 /* function updateUIForGuest() {
@@ -285,10 +285,10 @@ function updateUIForAuthenticatedUser() {
 } */
 
 function updateUIForGuest() {
-  console.log('🔍 Actualizando UI para invitado');
+  console.log('Actualizando UI para invitado');
 
   if (!navLinks) {
-    console.error('❌ ERROR: navLinks no está definido');
+    console.error('ERROR: navLinks no está definido');
     return;
   }
 
@@ -615,7 +615,7 @@ async function login() {
   }
 
   try {
-    console.log('🟡 FRONTEND: Haciendo fetch a /api/login...');
+    console.log('FRONTEND: Haciendo fetch a /api/login...');
 
     const response = await fetch('/api/login', {
       method: 'POST',
@@ -625,13 +625,13 @@ async function login() {
       body: JSON.stringify({ email, password })
     });
 
-    console.log('🟡 FRONTEND: Response status:', response.status);
+    console.log('FRONTEND: Response status:', response.status);
 
     const result = await response.json();
-    console.log('🟡 FRONTEND: Response data:', result);
+    console.log('FRONTEND: Response data:', result);
 
     if (result.success) {
-      console.log('✅ FRONTEND: Login exitoso');
+      console.log('FRONTEND: Login exitoso');
       showMessage('Inicio de sesión exitoso', 'success');
       appState.user = result.user;
       updateUIForAuthenticatedUser();
@@ -641,11 +641,11 @@ async function login() {
       document.getElementById('loginEmail').value = '';
       document.getElementById('loginPassword').value = '';
     } else {
-      console.log('❌ FRONTEND: Error del servidor:', result.error);
+      console.log('FRONTEND: Error del servidor:', result.error);
       showMessage(result.error, 'error');
     }
   } catch (error) {
-    console.error('💥 FRONTEND: Error en login:', error);
+    console.error('FRONTEND: Error en login:', error);
     showMessage('Error al iniciar sesión', 'error');
   }
 }

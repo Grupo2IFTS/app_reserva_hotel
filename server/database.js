@@ -3,8 +3,8 @@ const mariadb = require('mariadb');
 // Configuración de la conexión a la base de datos
 const pool = mariadb.createPool({
   host: 'localhost',
-  user: 'root', // Cambiar por tu usuario de MariaDB
-  password: 'Admin12345', // Cambiar por tu contraseña de MariaDB
+  user: 'root',
+  password: 'Admin12345',
   database: 'sistema_hoteles',
   connectionLimit: 5,
   acquireTimeout: 60000,

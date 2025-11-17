@@ -2,6 +2,7 @@
     --primary-color: #1b3242;
     --secondary-color: #B4B8AB;
     --light-color: #ffffff;
+    --red-color: #e74c3c;
     --dark-color: #333;
     --text-color: #ffffff;
     --text-color-2: #c4c4c4;
@@ -441,7 +442,7 @@ footer > p {
 }
 
 .admin-card {
-    background: white;
+    background: var(--light-color);
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
@@ -463,13 +464,13 @@ footer > p {
 }
 
 .role-badge.admin {
-    background-color: #e74c3c;
-    color: white;
+    background-color: var(--red-color);
+    color: var(--light-color);
 }
 
 .role-badge.cliente {
     background-color: #3498db;
-    color: white;
+    color: var(--light-color);
 }
 
 .reservation-actions {
