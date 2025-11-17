@@ -174,7 +174,7 @@ async function checkAuthStatus() {
   userGreeting.textContent = `Hola, ${appState.user.nombre}`;
 } */
 
-function updateUIForAuthenticatedUser() {
+/* function updateUIForAuthenticatedUser() {
   console.log('🔍 Actualizando UI para usuario autenticado:', appState.user);
 
   // VERIFICAR QUE navLinks EXISTE
@@ -219,9 +219,57 @@ function updateUIForAuthenticatedUser() {
   userGreeting.textContent = `Hola, ${appState.user.nombre}`;
 
   console.log('✅ UI actualizada correctamente');
+} */
+
+function updateUIForAuthenticatedUser() {
+  console.log('🔍 Actualizando UI para usuario autenticado:', appState.user);
+
+  if (!navLinks) {
+    console.error('❌ ERROR: navLinks no está definido');
+    return;
+  }
+
+  // Mostrar/ocultar elementos de navegación
+  if (navLinks.loginLink) navLinks.loginLink.classList.add('hidden');
+  if (navLinks.registerLink) navLinks.registerLink.classList.add('hidden');
+  if (navLinks.reservationsLink) navLinks.reservationsLink.classList.remove('hidden');
+  if (navLinks.logoutLink) navLinks.logoutLink.classList.remove('hidden');
+
+  // Enlace de administración
+  let adminLink = document.getElementById('adminLink');
+  if (!adminLink) {
+    console.log('🟡 Creando enlace de administración...');
+    adminLink = document.createElement('a');
+    adminLink.id = 'adminLink';
+    adminLink.href = 'admin-panel.html';
+    adminLink.innerHTML = '<i class="fas fa-cog"></i> Administración';
+    adminLink.className = 'hidden';
+    document.querySelector('.nav').appendChild(adminLink);
+  }
+
+  if (appState.user && appState.user.rol === 'admin') {
+    adminLink.classList.remove('hidden');
+    console.log('✅ Mostrando enlace de administración');
+  } else {
+    adminLink.classList.add('hidden');
+  }
+
+  // Saludo de usuario
+  let userGreeting = document.getElementById('userGreeting');
+  if (!userGreeting) {
+    userGreeting = document.createElement('span');
+    userGreeting.id = 'userGreeting';
+    userGreeting.className = 'user-greeting';
+    document.querySelector('.nav').appendChild(userGreeting);
+  }
+
+  // MOSTRAR NOMBRE CORRECTO
+  const nombreUsuario = appState.user.nombre || appState.user.email;
+  userGreeting.textContent = `Hola, ${nombreUsuario}`;
+  console.log('✅ Saludo actualizado:', userGreeting.textContent);
+
+  console.log('✅ UI actualizada correctamente');
 }
-
-
 // Actualizar UI para invitado
 /* function updateUIForGuest() {
   navLinks.loginLink.classList.remove('hidden');

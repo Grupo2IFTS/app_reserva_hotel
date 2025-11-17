@@ -224,7 +224,7 @@ app.post('/api/buscar-disponibilidad', async (req, res) => {
 });
 
 // Registro de usuario
-app.post('/api/registro', async (req, res) => {
+/* app.post('/api/registro', async (req, res) => {
   try {
     const { nombre, email, password } = req.body;
 
@@ -281,41 +281,121 @@ app.post('/api/registro', async (req, res) => {
     console.error('Error en registro:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
+}); */
+
+// Registro de usuario
+app.post('/api/registro', async (req, res) => {
+  try {
+    const { nombre, email, password } = req.body;
+
+    console.log('📝 === DEBUG REGISTRO INICIADO ===');
+    console.log('Datos recibidos:', { nombre, email, password: password ? '[PROVIDED]' : 'MISSING' });
+
+    if (!nombre || !email || !password) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
+    }
+
+    const conn = await db.getConnection();
+
+    // Verificar si el email ya existe
+    const usuarioExistente = await conn.query(
+      'SELECT id_usuario FROM Usuario WHERE email = ?',
+      [email]
+    );
+
+    if (usuarioExistente.length > 0) {
+      await conn.release();
+      return res.status(400).json({ error: 'El email ya está registrado' });
+    }
+
+    // Hash de la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('🔑 Contraseña hasheada correctamente');
+
+    // Crear usuario
+    const resultadoUsuario = await conn.query(
+      'INSERT INTO Usuario (email, password, fecha_registro, activo, rol) VALUES (?, ?, NOW(), 1, "cliente")',
+      [email, hashedPassword]
+    );
+
+    const idUsuario = Number(resultadoUsuario.insertId);
+    console.log('✅ Usuario creado con ID:', idUsuario);
+
+    // Crear cliente - MEJORADO
+    const nombreCompleto = nombre.trim().split(' ');
+    const primerNombre = nombreCompleto[0] || 'Usuario';
+    const apellido = nombreCompleto.slice(1).join(' ') || 'Sin Apellido';
+
+    // Generar DNI temporal único
+    const dniTemporal = 'TEMP_' + Date.now().toString().substr(8, 6);
+
+    console.log('👤 Creando cliente:', { primerNombre, apellido, dniTemporal, idUsuario });
+
+    const resultadoCliente = await conn.query(
+      'INSERT INTO Cliente (nombre, apellido, dni, email, telefono, id_usuario) VALUES (?, ?, ?, ?, ?, ?)',
+      [primerNombre, apellido, dniTemporal, email, '000000000', idUsuario]
+    );
+
+    const idCliente = Number(resultadoCliente.insertId);
+    console.log('✅ Cliente creado con ID:', idCliente);
+
+    await conn.release();
+
+    res.json({
+      success: true,
+      message: 'Usuario registrado correctamente. Ahora puede iniciar sesión.',
+      user: {
+        id_usuario: idUsuario,
+        id_cliente: idCliente,
+        email: email,
+        nombre: primerNombre,
+        apellido: apellido,
+        rol: 'cliente'
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 ERROR en registro:', error);
+    res.status(500).json({ error: 'Error interno del servidor: ' + error.message });
+  }
 });
 
 // Login de usuario
-app.post('/api/login', async (req, res) => {
+/* app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    
+
     console.log('🔐 === DEBUG LOGIN INICIADO ===');
     console.log('📧 Email recibido:', email);
     console.log('🔑 Contraseña recibida:', password);
-    
+
     const conn = await db.getConnection();
 
     // CONSULTA CON DEBUG
     const query = `SELECT 
-      u.id_usuario, 
-      u.email, 
-      u.password, 
-      u.fecha_registro, 
-      u.activo, 
-      u.rol, 
-      u.id_cliente as usuario_id_cliente,
-      c.id_cliente as cliente_id_cliente,
-      c.nombre, 
-      c.apellido 
-     FROM Usuario u 
-     LEFT JOIN Cliente c ON u.id_cliente = c.id_cliente 
-     WHERE u.email = ? AND u.activo = 1`;
-    
+  u.id_usuario, 
+  u.email, 
+  u.password, 
+  u.fecha_registro, 
+  u.activo, 
+  u.rol,
+  c.id_cliente,
+  c.nombre, 
+  c.apellido 
+ FROM Usuario u 
+ LEFT JOIN Cliente c ON u.id_usuario = c.id_usuario  // ← JOIN CORREGIDO
+ WHERE u.email = ? AND u.activo = 1`;
+
     console.log('📝 Ejecutando query...');
-    
+
     const usuarios = await conn.query(query, [email]);
-    
+
     console.log('👥 Usuarios encontrados:', usuarios.length);
-    
+
     if (usuarios.length === 0) {
       console.log('❌ ERROR: No se encontró usuario con ese email');
       await conn.release();
@@ -323,7 +403,7 @@ app.post('/api/login', async (req, res) => {
     }
 
     const usuario = db.processResults(usuarios)[0];
-    
+
     console.log('✅ Usuario encontrado:', {
       id: usuario.id_usuario,
       email: usuario.email,
@@ -336,7 +416,7 @@ app.post('/api/login', async (req, res) => {
     console.log('🔍 Comparando contraseñas...');
     console.log('   Contraseña ingresada:', password);
     console.log('   Hash en BD:', usuario.password);
-    
+
     const passwordValido = await bcrypt.compare(password, usuario.password);
     console.log('🔐 Resultado comparación:', passwordValido);
 
@@ -351,11 +431,11 @@ app.post('/api/login', async (req, res) => {
       id_usuario: Number(usuario.id_usuario),
       id_cliente: usuario.usuario_id_cliente ? Number(usuario.usuario_id_cliente) : null,
       email: usuario.email,
-      nombre: usuario.nombre || 'Administrador',
-      apellido: usuario.apellido || 'Sistema',
+      nombre: usuario.nombre || 'Usuario',
+      apellido: usuario.apellido || '',
       rol: usuario.rol
     };
-    
+
     console.log('🎉 SESIÓN CREADA:', req.session.user);
     await conn.release();
 
@@ -364,7 +444,92 @@ app.post('/api/login', async (req, res) => {
       message: 'Inicio de sesión exitoso',
       user: req.session.user
     });
-    
+
+  } catch (error) {
+    console.error('💥 ERROR en login:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}); */
+
+// Login de usuario
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    console.log('🔐 === DEBUG LOGIN INICIADO ===');
+    console.log('📧 Email recibido:', email);
+
+    const conn = await db.getConnection();
+
+    // CONSULTA CORREGIDA - JOIN CORRECTO
+    const query = `SELECT 
+      u.id_usuario, 
+      u.email, 
+      u.password, 
+      u.fecha_registro, 
+      u.activo, 
+      u.rol,
+      c.id_cliente,
+      c.nombre, 
+      c.apellido 
+    FROM Usuario u 
+    LEFT JOIN Cliente c ON u.id_usuario = c.id_usuario  -- JOIN CORREGIDO
+    WHERE u.email = ? AND u.activo = 1`;
+
+    console.log('📝 Ejecutando query...');
+
+    const usuarios = await conn.query(query, [email]);
+
+    console.log('👥 Usuarios encontrados:', usuarios.length);
+
+    if (usuarios.length === 0) {
+      console.log('❌ ERROR: No se encontró usuario con ese email');
+      await conn.release();
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    const usuario = db.processResults(usuarios)[0];
+
+    console.log('✅ Usuario encontrado:', {
+      id: usuario.id_usuario,
+      email: usuario.email,
+      rol: usuario.rol,
+      activo: usuario.activo,
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      id_cliente: usuario.id_cliente
+    });
+
+    // VERIFICAR CONTRASEÑA
+    console.log('🔍 Comparando contraseñas...');
+    const passwordValido = await bcrypt.compare(password, usuario.password);
+    console.log('🔐 Resultado comparación:', passwordValido);
+
+    if (!passwordValido) {
+      console.log('❌ ERROR: Contraseña incorrecta');
+      await conn.release();
+      return res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+
+    // CREAR SESIÓN CON DATOS CORRECTOS
+    req.session.user = {
+      id_usuario: Number(usuario.id_usuario),
+      id_cliente: usuario.id_cliente ? Number(usuario.id_cliente) : null,
+      email: usuario.email,
+      nombre: usuario.nombre || 'Usuario',
+      apellido: usuario.apellido || '',
+      rol: usuario.rol
+    };
+
+    console.log('🎉 SESIÓN CREADA:', req.session.user);
+    await conn.release();
+
+    res.json({
+      success: true,
+      message: 'Inicio de sesión exitoso',
+      user: req.session.user
+    });
+
   } catch (error) {
     console.error('💥 ERROR en login:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
