@@ -73,6 +73,12 @@ function convertBigInt(obj) {
     return Number(obj);
   }
 
+  // Si es una fecha, devolverla tal cual para que res.json la serialice correctamente
+  if (obj instanceof Date) {
+    return obj;
+  }
+  // -------------------------
+
   if (Array.isArray(obj)) {
     return obj.map(item => convertBigInt(item));
   }

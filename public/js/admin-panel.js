@@ -346,7 +346,7 @@ function formatDateSafe(dateString) {
         
         return date.toLocaleDateString('es-ES', {
             year: 'numeric',
-            month: 'long',
+            month: 'numeric',
             day: 'numeric'
         });
     } catch (error) {
@@ -367,10 +367,11 @@ function formatDateTimeSafe(dateTimeString) {
         
         return date.toLocaleString('es-ES', {
             year: 'numeric',
-            month: 'long',
+            month: 'numeric',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
+            second: '2-digit'
         });
     } catch (error) {
         console.error('Error formateando fecha/hora:', error, dateTimeString);
