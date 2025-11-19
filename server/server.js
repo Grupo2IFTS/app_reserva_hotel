@@ -60,7 +60,7 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-// APLICAR MIDDLEWARE DE ADMIN AQUÍ
+// APLICAR MIDDLEWARE DE Admin.
 app.use('/api/admin', requireAdmin);
 
 // Función para convertir BigInt a Number
@@ -77,7 +77,6 @@ function convertBigInt(obj) {
   if (obj instanceof Date) {
     return obj;
   }
-  // -------------------------
 
   if (Array.isArray(obj)) {
     return obj.map(item => convertBigInt(item));

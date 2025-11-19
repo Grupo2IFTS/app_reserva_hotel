@@ -133,93 +133,6 @@ async function checkAuthStatus() {
 }
 
 // Actualizar UI para usuario autenticado
-/* function updateUIForAuthenticatedUser() {
-  navLinks.loginLink.classList.add('hidden');
-  navLinks.registerLink.classList.add('hidden');
-  navLinks.reservationsLink.classList.remove('hidden');
-  navLinks.logoutLink.classList.remove('hidden');
-  navLinks.adminLink.classList.remove('hidden');
-
-  console.log('🔍 NavLinks encontrados:', {
-  homeLink: !!navLinks.homeLink,
-  loginLink: !!navLinks.loginLink,
-  registerLink: !!navLinks.registerLink,
-  reservationsLink: !!navLinks.reservationsLink,
-  logoutLink: !!navLinks.logoutLink
-});
-  
-  // Mostrar enlace de administración si es admin
-  let adminLink = document.getElementById('adminLink');
-  if (!adminLink) {
-    adminLink = document.createElement('a');
-    adminLink.id = 'adminLink';
-    adminLink.href = 'admin-panel.html';
-    adminLink.innerHTML = '<i class="fas fa-cog"></i> Administración';
-    document.querySelector('.nav').appendChild(adminLink);
-  }
-  
-  if (appState.user.rol === 'admin') {
-    adminLink.classList.remove('hidden');
-  } else {
-    adminLink.classList.add('hidden');
-  }
-  
-  // Mostrar nombre de usuario si está disponible
-  let userGreeting = document.getElementById('userGreeting');
-  if (!userGreeting) {
-    userGreeting = document.createElement('span');
-    userGreeting.id = 'userGreeting';
-    document.querySelector('.nav').appendChild(userGreeting);
-  }
-  userGreeting.textContent = `Hola, ${appState.user.nombre}`;
-} */
-
-/* function updateUIForAuthenticatedUser() {
-  console.log('🔍 Actualizando UI para usuario autenticado:', appState.user);
-
-  // VERIFICAR QUE navLinks EXISTE
-  if (!navLinks) {
-    console.error('❌ ERROR: navLinks no está definido');
-    return;
-  }
-
-  // VERIFICAR CADA ELEMENTO ANTES DE USARLO
-  if (navLinks.loginLink) navLinks.loginLink.classList.add('hidden');
-  if (navLinks.registerLink) navLinks.registerLink.classList.add('hidden');
-  if (navLinks.reservationsLink) navLinks.reservationsLink.classList.remove('hidden');
-  if (navLinks.logoutLink) navLinks.logoutLink.classList.remove('hidden');
-
-  // Mostrar enlace de administración si es admin
-  let adminLink = document.getElementById('adminLink');
-  if (!adminLink) {
-    console.log('🟡 Creando enlace de administración...');
-    adminLink = document.createElement('a');
-    adminLink.id = 'adminLink';
-    adminLink.href = 'admin-panel.html';
-    adminLink.innerHTML = '<i class="fas fa-cog"></i> Administración';
-    adminLink.className = 'hidden';
-    document.querySelector('.nav').appendChild(adminLink);
-  }
-
-  if (appState.user.rol === 'admin') {
-    adminLink.classList.remove('hidden');
-    console.log('✅ Mostrando enlace de administración');
-  } else {
-    adminLink.classList.add('hidden');
-  }
-
-  // Mostrar nombre de usuario
-  let userGreeting = document.getElementById('userGreeting');
-  if (!userGreeting) {
-    userGreeting = document.createElement('span');
-    userGreeting.id = 'userGreeting';
-    userGreeting.className = 'user-greeting';
-    document.querySelector('.nav').appendChild(userGreeting);
-  }
-  userGreeting.textContent = `Hola, ${appState.user.nombre}`;
-
-  console.log('✅ UI actualizada correctamente');
-} */
 
 function updateUIForAuthenticatedUser() {
   console.log('🔍 Actualizando UI para usuario autenticado:', appState.user);
@@ -270,20 +183,8 @@ function updateUIForAuthenticatedUser() {
 
   console.log('UI actualizada correctamente');
 }
-// Actualizar UI para invitado
-/* function updateUIForGuest() {
-  navLinks.loginLink.classList.remove('hidden');
-  navLinks.registerLink.classList.remove('hidden');
-  navLinks.reservationsLink.classList.add('hidden');
-  navLinks.logoutLink.classList.add('hidden');
-  
-  // Eliminar saludo de usuario si existe
-  const userGreeting = document.getElementById('userGreeting');
-  if (userGreeting) {
-    userGreeting.remove();
-  }
-} */
 
+// Actualizar UI para usuario invitado
 function updateUIForGuest() {
   console.log('Actualizando UI para invitado');
 
@@ -850,8 +751,6 @@ function formatDateTimeSafe(dateTimeString) {
     return 'Fecha no disponible';
   }
 }
-
-// Mostrar reservas del usuario
 
 // Mostrar reservas del usuario
 function displayUserReservations(reservas) {
