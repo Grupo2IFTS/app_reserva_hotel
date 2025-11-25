@@ -81,6 +81,8 @@ function setupEventListeners() {
   document.getElementById('searchBtn').addEventListener('click', searchAvailability);
   document.getElementById('loginBtn').addEventListener('click', login);
   document.getElementById('registerBtn').addEventListener('click', register);
+  document.getElementById('registerPassword').addEventListener('input', updatePasswordStrength);
+  document.getElementById('registerConfirmPassword').addEventListener('input', checkPasswordMatch);
 
   // Enlaces entre formularios
   document.getElementById('showRegister').addEventListener('click', (e) => {
@@ -210,6 +212,176 @@ function updateUIForGuest() {
     adminLink.classList.add('hidden');
   }
 }
+
+/* ---------------------------------------------------------------------- */
+
+// Función para evaluar la fortaleza de la contraseña
+function updatePasswordStrength() {
+    const password = document.getElementById('registerPassword').value;
+    const strengthIndicator = document.getElementById('strengthIndicator');
+    const strengthText = document.getElementById('strengthText');
+    
+    if (!password) {
+        strengthIndicator.className = 'strength-indicator';
+        strengthIndicator.style.width = '0%';
+        strengthText.textContent = 'Seguridad de la contraseña';
+        return;
+    }
+    
+    // Calcular puntuación de fortaleza
+    let score = 0;
+    
+    // Longitud mínima
+    if (password.length >= 6) score += 1;
+    if (password.length >= 8) score += 1;
+    if (password.length >= 12) score += 1;
+    
+    // Caracteres variados
+    if (/[a-z]/.test(password)) score += 1; // minúsculas
+    if (/[A-Z]/.test(password)) score += 1; // mayúsculas
+    if (/[0-9]/.test(password)) score += 1; // números
+    if (/[^a-zA-Z0-9]/.test(password)) score += 1; // caracteres especiales
+    
+    // Determinar nivel de fortaleza
+    let strength, width, colorClass, text;
+    
+    if (score <= 2) {
+        strength = 'weak';
+        width = '33%';
+        colorClass = 'strength-weak';
+        text = 'Débil';
+    } else if (score <= 4) {
+        strength = 'medium';
+        width = '66%';
+        colorClass = 'strength-medium';
+        text = 'Media';
+    } else if (score <= 6) {
+        strength = 'strong';
+        width = '100%';
+        colorClass = 'strength-strong';
+        text = 'Fuerte';
+    } else {
+        strength = 'very-strong';
+        width = '100%';
+        colorClass = 'strength-very-strong';
+        text = 'Muy fuerte';
+    }
+    
+    // Actualizar la interfaz
+    strengthIndicator.className = `strength-indicator ${colorClass}`;
+    strengthIndicator.style.width = width;
+    strengthText.textContent = `Fortaleza: ${text}`;
+    strengthText.style.color = getStrengthColor(strength);
+}
+
+// Función para obtener el color según la fortaleza
+function getStrengthColor(strength) {
+    switch(strength) {
+        case 'weak': return '#e74c3c';
+        case 'medium': return '#f39c12';
+        case 'strong': return '#27ae60';
+        case 'very-strong': return '#2ecc71';
+        default: return '#666';
+    }
+}
+
+// Función para verificar si las contraseñas coinciden
+function checkPasswordMatch() {
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    const matchElement = document.getElementById('passwordMatch');
+    
+    if (!confirmPassword) {
+        matchElement.textContent = '';
+        matchElement.className = 'password-match';
+        return;
+    }
+    
+    if (password === confirmPassword) {
+        matchElement.textContent = '✓ Las contraseñas coinciden';
+        matchElement.className = 'password-match match-valid';
+    } else {
+        matchElement.textContent = '✗ Las contraseñas no coinciden';
+        matchElement.className = 'password-match match-invalid';
+    }
+}
+
+// Modificar la función register para incluir validación de fortaleza
+async function register() {
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const confirmPassword = document.getElementById('registerConfirmPassword').value;
+    
+    // Verificar fortaleza de contraseña
+    const strengthIndicator = document.getElementById('strengthIndicator');
+    const isWeakPassword = strengthIndicator.classList.contains('strength-weak');
+    
+    if (!name || !email || !password || !confirmPassword) {
+        showMessage('Por favor, complete todos los campos', 'error');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        showMessage('Las contraseñas no coinciden', 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showMessage('La contraseña debe tener al menos 6 caracteres', 'error');
+        return;
+    }
+    
+    // Advertencia para contraseñas débiles (opcional)
+    if (isWeakPassword) {
+        const proceed = confirm('Su contraseña es considerada débil. ¿Desea continuar de todos modos? Para mayor seguridad, le recomendamos usar una combinación de letras mayúsculas, minúsculas, números y caracteres especiales.');
+        if (!proceed) {
+            return;
+        }
+    }
+    
+    // Validar formato de email básico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showMessage('Por favor, ingrese un email válido', 'error');
+        return;
+    }
+    
+    // Resto del código de registro...
+    try {
+        const response = await fetch('/api/registro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nombre: name, email, password })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showMessage(result.message, 'success');
+            showPage('loginPage');
+
+            // Limpiar formulario y resetear la barra de fortaleza
+            document.getElementById('registerName').value = '';
+            document.getElementById('registerEmail').value = '';
+            document.getElementById('registerPassword').value = '';
+            document.getElementById('registerConfirmPassword').value = '';
+            document.getElementById('strengthIndicator').className = 'strength-indicator';
+            document.getElementById('strengthIndicator').style.width = '0%';
+            document.getElementById('strengthText').textContent = 'Seguridad de la contraseña';
+            document.getElementById('passwordMatch').textContent = '';
+        } else {
+            showMessage(result.error, 'error');
+        }
+    } catch (error) {
+        console.error('Error en registro:', error);
+        showMessage('Error al registrar usuario', 'error');
+    }
+}
+
+/* ---------------------------------------------------------------------- */
 
 
 // Mostrar página específica

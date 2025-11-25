@@ -11,7 +11,6 @@
     <div class="header">
         <h1>Sistema de Reservas de Hotel</h1>
     </div>
-    
     <div class="nav">
         <a href="#" id="homeLink"><i class="fas fa-solid fa-house"></i> Inicio</a>
         <a href="#" id="loginLink"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
@@ -20,7 +19,6 @@
         <a href="#" id="logoutLink" class="hidden"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
         <a href="admin-panel.html" id="adminLink" class="hidden"><i class="fas fa-cog"></i> Administración</a>
     </div>
-    
     <div class="container">
         <!-- Página de Inicio -->
         <div id="homePage">
@@ -51,11 +49,10 @@
                 <div id="hotelsResults" class="hotel-list"></div>
             </div>
         </div>
-        
         <!-- Formulario de Login -->
         <div id="loginPage" class="hidden">
             <div class="login-form">
-                <h2> Iniciar Sesión</h2>
+                <h2><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</h2>
                 <div class="form-group">
                     <label for="loginEmail"> Email:</label>
                     <input type="email" id="loginEmail" required>
@@ -68,11 +65,10 @@
                 <p>¿No tienes cuenta? <a href="#" id="showRegister">Regístrate aquí</a></p>
             </div>
         </div>
-        
         <!-- Formulario de Registro -->
-        <div id="registerPage" class="hidden">
+        <!-- <div id="registerPage" class="hidden">
             <div class="login-form">
-                <h2> Crear Cuenta</h2>
+                <h2><i class="fa-solid fa-user-plus"></i> Crear Cuenta</h2>
                 <div class="form-group">
                     <label for="registerName"> Nombre Completo:</label>
                     <input type="text" id="registerName" required>
@@ -92,6 +88,48 @@
                 <button id="registerBtn"> Registrarse</button>
                 <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión aquí</a></p>
             </div>
+        </div> -->
+        
+        <div id="registerPage" class="hidden">
+            <div class="login-form">
+                <h2><i class="fa-solid fa-user-plus"></i> Crear Cuenta</h2>
+                <div class="form-group">
+                    <label for="registerName"> Nombre Completo:</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail"> Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword"> Contraseña:</label>
+                    <input type="password" id="registerPassword" required minlength="6">
+                    <!-- Barra de fortaleza de contraseña -->
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-indicator" id="strengthIndicator"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText">Seguridad de la contraseña</div>
+                    </div>
+                </div>
+                <div class="password-requirements">
+                    <small>La contraseña debe contener:</small>
+                    <ul>
+                        <li id="req-length">Al menos 6 caracteres</li>
+                        <li id="req-lowercase">Una letra minúscula</li>
+                        <li id="req-uppercase">Una letra mayúscula</li>
+                        <li id="req-number">Un número</li>
+                        <li id="req-special">Un carácter especial</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword"> Confirmar Contraseña:</label>
+                    <input type="password" id="registerConfirmPassword" required>
+                    <div class="password-match" id="passwordMatch"></div>
+                </div>
+                <button id="registerBtn"> Registrarse</button>
+                <p>¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión aquí</a></p>
+            </div>
         </div>
         
         <!-- Mis Reservas -->
@@ -99,7 +137,6 @@
             <h2> Mis Reservas</h2>
             <div id="userReservations"></div>
         </div>
-        
         <!-- Mensajes -->
         <div id="message" class="hidden"></div>
     </div>
