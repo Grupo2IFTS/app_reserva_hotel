@@ -214,7 +214,6 @@ function updateUIForGuest() {
 }
 
 /* ------------------------------------------------------------------------------------------------------------ */
-
 // Función para evaluar la fortaleza de la contraseña
 function updatePasswordStrength() {
   const password = document.getElementById('registerPassword').value;
@@ -382,7 +381,6 @@ async function register() {
 }
 
 /* ------------------------------------------------------------------------------------------------------------ */
-
 
 // Mostrar página específica
 function showPage(pageId) {

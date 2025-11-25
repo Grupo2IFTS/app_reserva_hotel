@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
+
 // Configuración de sesiones
 app.use(session({
   secret: 'hotel-reservation-secret-key-2025',
@@ -59,9 +60,6 @@ function requireAdmin(req, res, next) {
 
   next();
 }
-
-// APLICAR MIDDLEWARE DE Admin.
-app.use('/api/admin', requireAdmin);
 
 // Función para convertir BigInt a Number
 function convertBigInt(obj) {
@@ -709,7 +707,6 @@ app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
   console.log(`Directorio público: ${path.join(__dirname, '../public')}`);
 });
-
 
 /* // Ruta temporal para debug de admin
 app.get('/api/debug/admin', (req, res) => {

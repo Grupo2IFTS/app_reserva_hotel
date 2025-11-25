@@ -13,7 +13,7 @@ const pool = mariadb.createPool({
   bigIntAsNumber: true, // Convierte BIGINT a number en lugar de BigInt
   insertIdAsNumber: true, // Convierte el último ID insertado a number
   decimalAsNumber: false, // Mantiene DECIMAL como string para precisión
-  dateStrings: true // Devuelve fechas como strings
+  dateStrings: true // Devuelve fechas como strings. Resolvió el problema de visualizar correctamente las fechas en la lista de reservas de los clientes.
 });
 
 // Función para procesar resultados y convertir BigInt

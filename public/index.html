@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
-    <title>Sistema de Reservas de Hotel</title>
+    <title> Grupo 2 - Reservas de Hotel</title>
 </head>
 
 <body>
@@ -29,24 +29,29 @@
                 <p>Utiliza el formulario a continuación para buscar habitaciones disponibles en nuestros hoteles
                     asociados.</p>
             </div>
-            <div class="search-form">
-                <h2><i class="fa-solid fa-magnifying-glass"></i> Buscar Habitaciones Disponibles</h2>
-                <div class="form-group">
-                    <label for="checkin"><i class="fa-solid fa-calendar-days"></i> Fecha de Entrada:</label>
-                    <input type="date" id="checkin" required>
+            <section class="busqueda-section">
+                <div class="search-form">
+                    <h2><i class="fa-solid fa-magnifying-glass"></i> Buscar Habitaciones Disponibles</h2>
+                    <div class="form-group">
+                        <label for="checkin"><i class="fa-solid fa-calendar-days"></i> Fecha de Entrada:</label>
+                        <input type="date" id="checkin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout"><i class="fa-solid fa-calendar-days"></i> Fecha de Salida:</label>
+                        <input type="date" id="checkout" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hotel"><i class="fa-solid fa-hotel"></i> Hotel:</label>
+                        <select id="hotel">
+                            <option value=""><i class="fa-solid fa-hotel"></i> Todos los hoteles</option>
+                        </select>
+                    </div>
+                    <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i> Buscar Disponibilidad</button>
                 </div>
-                <div class="form-group">
-                    <label for="checkout"><i class="fa-solid fa-calendar-days"></i> Fecha de Salida:</label>
-                    <input type="date" id="checkout" required>
+                <div>
+                    <img src="./img/recepcion 4.jpg" alt="Foto de recepción de hotel">
                 </div>
-                <div class="form-group">
-                    <label for="hotel"><i class="fa-solid fa-hotel"></i> Hotel:</label>
-                    <select id="hotel">
-                        <option value=""><i class="fa-solid fa-hotel"></i> Todos los hoteles</option>
-                    </select>
-                </div>
-                <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i> Buscar Disponibilidad</button>
-            </div>
+            </section>
             <div id="searchResults" class="hidden">
                 <h2><i class="fa-solid fa-square-poll-vertical"></i> Resultados de Búsqueda</h2>
                 <div id="hotelsResults" class="hotel-list"></div>
