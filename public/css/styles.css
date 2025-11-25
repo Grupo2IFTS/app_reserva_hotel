@@ -5,9 +5,10 @@
     --red-color: #e74c3c;
     --dark-color: #333;
     --text-color: #ffffff;
-    --text-color-2: #c4c4c4;
+    --text-color-2: #e0e0e0;
     --text-color-3: #0a95e6;
     --text-color-4: #bb9d1a;
+    --text-color-5: #8a7f7f;
     --background-color: #3a3a3a;
     --background-color-2: #f4f4f4;
     --background-color-3: #8a7f7f;
@@ -106,7 +107,7 @@ body {
 
 .busqueda-section img {
     max-width: 700px;
-    height: 590px;
+    height: 580px;
     margin: 30px auto;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
@@ -125,8 +126,8 @@ body {
     padding: 40px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     margin: 30px auto;
-    max-width: 600px;
-    height: 590px;
+    max-width: 700px;
+    height: 580px;
 }
 
 .search-form {
@@ -169,8 +170,17 @@ label {
     color: var(--dark-color);
 }
 
-input,
-select,
+input, select{
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    color: var(--text-color-5);
+}
+
 button {
     width: 100%;
     padding: 12px 15px;
@@ -179,6 +189,7 @@ button {
     box-sizing: border-box;
     font-size: 16px;
     transition: all 0.3s ease;
+    color: var(--text-color-2);
 }
 
 input:focus,
