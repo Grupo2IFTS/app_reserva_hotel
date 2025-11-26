@@ -15,7 +15,7 @@
     --background-color-4: #2c3e50;
     --background-color-5: #d4edda;
     --background-color-nav: #34495e;
-    --background-color-error:#f8d7da;
+    --background-color-error: #f8d7da;
     --hover-nav-color: #46627f;
     --input-color: #9c9c9c;
     --line-height-1: 1.6;
@@ -115,7 +115,7 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.login-form{
+.login-form {
     background: var(--light-color);
     padding: 40px;
     border-radius: 10px;
@@ -124,6 +124,7 @@ body {
     max-width: 600px;
     border: 1px solid var(--text-color-2);
 }
+
 .search-form {
     width: 600px;
     background: var(--light-color);
@@ -170,7 +171,8 @@ label {
     color: var(--dark-color);
 }
 
-input, select{
+input,
+select {
     width: 100%;
     padding: 12px 15px;
     border: 2px solid var(--input-color);
@@ -692,7 +694,7 @@ footer>p {
 /* Responsive media screen */
 
 @media screen and (max-width:1100px) {
-    
+
     .busqueda-section img {
         display: none;
     }
